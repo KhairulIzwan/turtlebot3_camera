@@ -1,0 +1,13 @@
+<launch>
+  <node name="image_converter_pi_usb"
+        pkg="turtlebot3_camera"
+        type="image_converter_pi_usb_node.py"
+        args=""
+        output="screen"/>
+
+  <node name="range_detector_pi_usb"
+        pkg="turtlebot3_camera"
+        type="range_detector_pi_usb_node.py"
+        args="HSV"
+        output="screen"/>
+</launch>

@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 
-""" UPDATED VERSION OF test_vision_node.py """
-
 from __future__ import print_function
 import roslib
-roslib.load_manifest('camera_tutorials')
+roslib.load_manifest('turtlebot3_camera')
 
 import sys
 import rospy
@@ -19,11 +17,11 @@ from sensor_msgs.msg import CameraInfo
 from cv_bridge import CvBridge
 from cv_bridge import CvBridgeError
 
-class test_vision_node:
+class image_converter_node:
     def __init__(self):
 
         """  Initializing your ROS Node """
-        rospy.init_node('test_vision_node', anonymous=True)
+        rospy.init_node('image_converter_node', anonymous=True)
 
         """ Give the OpenCV display window a name """
         self.cv_window_name = "Test Vision Node"
@@ -37,6 +35,9 @@ class test_vision_node:
         """ Subscribe to the camera info topic """
         self.imgRaw_sub = rospy.Subscriber("/camUSB/camera_info", CameraInfo, self.getCameraInfo)
 
+        """ Publish as the opencv image topic """
+        self.imgCV_pub = rospy.Publisher("/usb_opencv_img", Image, queue_size=10)
+
     def callback(self,data):
         """ Convert the raw image to OpenCV format """
         self.cvtImage(data)
@@ -46,6 +47,9 @@ class test_vision_node:
 
         """ Refresh the image on the screen """
         self.displayImg()
+
+        """ Publish converted Image """
+        self.publishImg()
 
     """ Get the width and height of the image """
     def getCameraInfo(self, msg):
@@ -57,6 +61,8 @@ class test_vision_node:
         try:
             """ Convert the raw image to OpenCV format """
             self.cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
+
+            self.cv_image_copy = self.cv_image.copy()
 
         except CvBridgeError as e:
             print(e)
@@ -86,23 +92,31 @@ class test_vision_node:
         cv2.imshow(self.cv_window_name, self.cv_image)
         cv2.waitKey(1)
 
+    """ coverting the uint8 OpenCV image to ROS image data """
+    """ Publisher.publish() -- explicit way """
+    def publishImg(self):
+        try:
+            self.imgCV_pub.publish(self.bridge.cv2_to_imgmsg(self.cv_image_copy, "bgr8"))
+        except CvBridgeError as e:
+            print(e)
+
 def usage():
     print("%s" % sys.argv[0])
 
 def main(args):
-    vn = test_vision_node()
+    vn = image_converter_node()
 
     try:
         rospy.spin()
     except KeyboardInterrupt:
-        print("Test vision node [OFFLINE]...")
+        print("Image converter node [OFFLINE]...")
 
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-    if len(sys.argv) == 1:
-        print("Test vision node [ONLINE]...")
-        main(sys.argv)
-    else:
+    if len(sys.argv) < 1:
         print(usage())
         sys.exit(1)
+    else:
+        print("Image converter node [ONLINE]...")
+        main(sys.argv)

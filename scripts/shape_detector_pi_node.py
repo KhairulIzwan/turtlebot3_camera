@@ -73,6 +73,7 @@ class shape_detector_node:
         """ load the image and resize it to a smaller factor so that the shapes can be approximated better """
         self.resized = imutils.resize(self.cv_image, width=300)
         self.ratio = self.image_height / float(self.resized.shape[0])
+        rospy.loginfo(self.ratio)
 
         """ convert the resized image to grayscale, blur it slightly, and threshold it """
         self.gray = cv2.cvtColor(self.resized, cv2.COLOR_BGR2GRAY)

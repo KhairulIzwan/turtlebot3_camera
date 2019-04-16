@@ -17,6 +17,8 @@ from sensor_msgs.msg import CameraInfo
 from cv_bridge import CvBridge
 from cv_bridge import CvBridgeError
 
+import numpy as np
+
 class image_converter_node:
     def __init__(self):
 
@@ -62,6 +64,7 @@ class image_converter_node:
             """ Convert the raw image to OpenCV format """
             self.cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
 
+            """ Duplicate orginal image """
             self.cv_image_copy = self.cv_image.copy()
 
         except CvBridgeError as e:

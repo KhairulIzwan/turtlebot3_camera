@@ -35,7 +35,7 @@ class range_detector_node:
 
         """ Subscribe to the raw camera image topic """
         # self.imgRaw_sub = rospy.Subscriber("/camPi/image_raw", Image, self.callback)
-        self.imgRaw_sub = rospy.Subscriber("/pi_usb_opencv_img", Image, self.callback)
+        self.imgRaw_sub = rospy.Subscriber("/camPi_USB/image_raw", Image, self.callback)
 
         """ Publish as color range topic """
         self.rangeColor_pub = rospy.Publisher("/color_range", IntList, queue_size=10)

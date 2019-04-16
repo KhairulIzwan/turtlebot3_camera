@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
+from __future__ import division
+
 import roslib
 roslib.load_manifest('turtlebot3_camera')
 
@@ -20,9 +22,35 @@ from camera_tutorials.msg import IntList
 from cv_bridge import CvBridge
 from cv_bridge import CvBridgeError
 
+import numpy as np
+
 class range_detector_node:
-    def __init__(self, filter):
+    def __init__(self, filter, gamma, alpha, beta):
         self.filter = filter
+        self.gamma = float(gamma)
+        self.alpha = float(alpha)
+        self.beta = float(beta)
+
+        if self.gamma > 0:
+            self.gamma = float(self.gamma / 100)
+        else:
+            self.gamma = 0.01
+
+        # TODO:
+        # if self.ksize <= 3:
+        #     self.ksize = 3
+        # else:
+        #     self.ksize = self.ksize
+
+        if self.alpha > 0:
+            self.alpha = float(self.alpha / 100)
+        else:
+            self.alpha = 0.01
+
+        if self.beta > 0:
+            self.beta = float(self.beta / 100)
+        else:
+            self.beta = 0.01
 
         """ Initializing your ROS Node """
         rospy.init_node('range_detector_node', anonymous=True)
@@ -35,7 +63,7 @@ class range_detector_node:
 
         """ Subscribe to the raw camera image topic """
         # self.imgRaw_sub = rospy.Subscriber("/camPi/image_raw", Image, self.callback)
-        self.imgRaw_sub = rospy.Subscriber("/usb_opencv_img", Image, self.callback)
+        self.imgRaw_sub = rospy.Subscriber("/camUSB/image_raw", Image, self.callback)
 
         """ Publish as color range topic """
         self.rangeColor_pub = rospy.Publisher("/color_range", IntList, queue_size=10)
@@ -43,6 +71,8 @@ class range_detector_node:
     def callback(self, data):
         """ Convert the raw image to OpenCV format """
         self.cvtImage(data)
+
+        rospy.loginfo(self.gamma)
 
         """ Determine the range_filter using the setup_trackbars() helper function """
         self.setup_trackbars()
@@ -67,9 +97,28 @@ class range_detector_node:
         try:
             """ Convert the raw image to OpenCV format """
             self.cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
+            self.adjust_gamma()
+            self.sharpImg()
 
         except CvBridgeError as e:
             print(e)
+
+    def adjust_gamma(self):
+        """ build a lookup table mapping the pixel values [0, 255] to their adjusted gamma values """
+        self.invGamma = 1.0 / self.gamma
+
+        self.table = np.array([((i / 255.0) ** self.invGamma) * 255 for i in np.arange(0, 256)]).astype("uint8")
+
+        """ apply gamma correction using the lookup table """
+        self.adjusted = cv2.LUT(self.cv_image, self.table)
+
+    def sharpImg(self):
+        """ apply guassian blur on src image """
+        self.blurred = cv2.GaussianBlur(self.adjusted, (5, 5), cv2.BORDER_DEFAULT)
+        self.sharpen = cv2.addWeighted(self.adjusted, self.alpha, self.blurred, -self.beta, self.gamma)
+
+        """ copying sharpen image"""
+        self.cv_image = self.sharpen
 
     def setup_trackbars(self):
         self.cv_window_trackbar = "Trackbars"
@@ -93,6 +142,7 @@ class range_detector_node:
                 self.values.append(v)
 
         # return values
+        rospy.loginfo(self.values)
 
     """ Convert the image colorspace """
     def cvtColorspace(self):
@@ -124,7 +174,7 @@ def usage():
     print("%s [COLOR_FILTER]" % sys.argv[0])
 
 def main(args):
-    vn = range_detector_node(sys.argv[1])
+    vn = range_detector_node(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
 
     try:
         rospy.spin()
@@ -134,12 +184,6 @@ def main(args):
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-    # if len(sys.argv) == 2:
-    #     print("Range detector node [ONLINE]...")
-    #     main(sys.argv)
-    # else:
-    #     print(usage())
-    #     sys.exit(1)
     if len(sys.argv) < 1:
         print(usage())
         sys.exit(1)

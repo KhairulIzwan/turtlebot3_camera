@@ -27,6 +27,8 @@ class range_detector_node:
         """ Initializing your ROS Node """
         rospy.init_node('range_detector_node', anonymous=True)
 
+        rospy.on_shutdown(self.shutdown)
+
         """ Give the OpenCV display window a name """
         self.cv_window_name = "Range Detector Node"
 
@@ -117,6 +119,13 @@ class range_detector_node:
         msg.v3_max = self.values[5]
         self.rangeColor_pub.publish(msg)
 
+    def shutdown(self):
+        try:
+            rospy.loginfo("Range detector node [OFFLINE]...")
+
+        finally:
+            cv2.destroyAllWindows()
+            
 def usage():
     print("Please specify type of color filter:")
     print("1. RGB")

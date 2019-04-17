@@ -26,6 +26,8 @@ class sharpenCalibrate_node:
         """  Initializing your ROS Node """
         rospy.init_node('sharpenCalibrate_node', anonymous=True)
 
+        rospy.on_shutdown(self.shutdown)
+
         """ Give the OpenCV display window a name """
         self.cv_window_name = "Test Vision Node"
 
@@ -176,6 +178,13 @@ class sharpenCalibrate_node:
         except CvBridgeError as e:
             print(e)
 
+    def shutdown(self):
+        try:
+            rospy.loginfo("Sharpen Calibration node [OFFLINE]...")
+
+        finally:
+            cv2.destroyAllWindows()
+            
 def usage():
     print("%s" % sys.argv[0])
 

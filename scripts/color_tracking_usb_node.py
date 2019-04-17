@@ -278,6 +278,13 @@ class color_tracking_node:
         cv2.imshow(self.cv_window_name, self.cv_image)
         cv2.waitKey(1)
 
+    def shutdown(self):
+        try:
+            rospy.loginfo("Color tracking node [OFFLINE]...")
+
+        finally:
+            cv2.destroyAllWindows()
+
 def usage():
     print("Please specify:")
     print("%s [Color Name] [v1_min] [v2_min] [v3_min] [v1_max] [v2_max] [v3_max]" % sys.argv[0])

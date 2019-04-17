@@ -51,6 +51,8 @@ class image_converter_node:
         """  Initializing your ROS Node """
         rospy.init_node('image_converter_node', anonymous=True)
 
+        rospy.on_shutdown(self.shutdown)
+
         """ Give the OpenCV display window a name """
         self.cv_window_name = "Test Vision Node (Pi-USB)"
 
@@ -149,6 +151,13 @@ class image_converter_node:
         except CvBridgeError as e:
             print(e)
 
+    def shutdown(self):
+        try:
+            rospy.loginfo("Image converter node [OFFLINE]...")
+
+        finally:
+            cv2.destroyAllWindows()
+            
 def usage():
     print("%s" % sys.argv[0])
 

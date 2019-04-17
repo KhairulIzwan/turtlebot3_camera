@@ -152,7 +152,11 @@ class image_converter_node:
             print(e)
 
     def shutdown(self):
-        rospy.loginfo("Image converter node [OFFLINE]...")
+        try:
+            rospy.loginfo("Image converter node [OFFLINE]...")
+
+        finally:
+            cv2.destroyAllWindows()
 
 def usage():
     print("%s" % sys.argv[0],)

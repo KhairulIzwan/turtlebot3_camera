@@ -2,7 +2,6 @@
   <node name="range_detector_pi_usb"
         pkg="turtlebot3_camera"
         type="range_detector_pi_usb_node.py"
-        args="HSV"
+        args="HSV 38 80 10"
         output="screen"/>
-
 </launch>

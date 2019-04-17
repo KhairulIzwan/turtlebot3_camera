@@ -1,6 +1,8 @@
 # turtlebot3_camera
 
 ## launch:
+### BringUp Camera
+#### Both launch file xxx_robot.launch and xxx_remote.launch act like bringup in original TurtleBot3 wiki.
 1.  Using Raspberry Pi Camera on RPi:
     1.  cameraPi_robot.launch
         1.  launch on TurtleBot3
@@ -73,6 +75,8 @@
             1.  /camUSB/camera_info
             2.  /camUSB/image_raw
 
-
 # Important:
-### All launch file with xxxxx_remote.launch will run Image converter node ("image_converter_pi_node.py", or "image_converter_pi_usb_node.py" or "image_converter_usb_node.py") which require args -- args="38 80 10" ---> gamma, alpha, beta.the value depending on the camera-calibration shapen the image quality --- rosrun turtlebot3_camera sharpenCalibrate_xxx_node.py
+### All launch file with xxx_remote.launch will run Image converter node ("image_converter_pi_node.py", or "image_converter_pi_usb_node.py" or "image_converter_usb_node.py") which require args -- args="38 80 10" ---> gamma, alpha, beta. The value depending on the camera-calibration shapen the image quality --- rosrun turtlebot3_camera sharpenCalibrate_xxx_node.py
+
+###  Range Detector
+####  Use to find the color range (upper/lower) -- require an args -- args="HSV 38 80 10" where HSV is colorspace, and 38, 80, and 18 (gamma, alpha, beta) from image sharpenCalibrate_xxx_node.

@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
+from __future__ import division
+
 import roslib
 roslib.load_manifest('turtlebot3_camera')
 
@@ -20,10 +22,36 @@ from cv_bridge import CvBridgeError
 import numpy as np
 
 class image_converter_node:
-    def __init__(self):
+    def __init__(self, gamma, alpha, beta):
+        self.gamma = float(gamma)
+        self.alpha = float(alpha)
+        self.beta = float(beta)
+
+        if self.gamma > 0:
+            self.gamma = float(self.gamma / 100)
+        else:
+            self.gamma = 0.01
+
+        # TODO:
+        # if self.ksize <= 3:
+        #     self.ksize = 3
+        # else:
+        #     self.ksize = self.ksize
+
+        if self.alpha > 0:
+            self.alpha = float(self.alpha / 100)
+        else:
+            self.alpha = 0.01
+
+        if self.beta > 0:
+            self.beta = float(self.beta / 100)
+        else:
+            self.beta = 0.01
 
         """  Initializing your ROS Node """
         rospy.init_node('image_converter_node', anonymous=True)
+
+        rospy.on_shutdown(self.shutdown)
 
         """ Give the OpenCV display window a name """
         self.cv_window_name = "Test Vision Node"
@@ -48,7 +76,7 @@ class image_converter_node:
         self.textInfo()
 
         """ Refresh the image on the screen """
-        self.displayImg()
+        # self.displayImg()
 
         """ Publish converted Image """
         self.publishImg()
@@ -64,11 +92,31 @@ class image_converter_node:
             """ Convert the raw image to OpenCV format """
             self.cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
 
+            self.adjust_gamma()
+            self.sharpImg()
+
             """ Duplicate orginal image """
             self.cv_image_copy = self.cv_image.copy()
 
         except CvBridgeError as e:
             print(e)
+
+    def adjust_gamma(self):
+        """ build a lookup table mapping the pixel values [0, 255] to their adjusted gamma values """
+        self.invGamma = 1.0 / self.gamma
+
+        self.table = np.array([((i / 255.0) ** self.invGamma) * 255 for i in np.arange(0, 256)]).astype("uint8")
+
+        """ apply gamma correction using the lookup table """
+        self.adjusted = cv2.LUT(self.cv_image, self.table)
+
+    def sharpImg(self):
+        """ apply guassian blur on src image """
+        self.blurred = cv2.GaussianBlur(self.adjusted, (5, 5), cv2.BORDER_DEFAULT)
+        self.sharpen = cv2.addWeighted(self.adjusted, self.alpha, self.blurred, -self.beta, self.gamma)
+
+        """ copying sharpen image"""
+        self.cv_image = self.sharpen
 
     """ Overlay some text onto the image display """
     def textInfo(self):
@@ -103,11 +151,14 @@ class image_converter_node:
         except CvBridgeError as e:
             print(e)
 
+    def shutdown(self):
+        rospy.loginfo("Image converter node [OFFLINE]...")
+
 def usage():
-    print("%s" % sys.argv[0])
+    print("%s" % sys.argv[0],)
 
 def main(args):
-    vn = image_converter_node()
+    vn = image_converter_node(sys.argv[1], sys.argv[2], sys.argv[3])
 
     try:
         rospy.spin()

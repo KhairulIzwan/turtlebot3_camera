@@ -1,0 +1,4 @@
+<launch>
+    <include file="$(find turtlebot3_camera)/launch/cameraUSB_remote.launch" />
+    <include file="$(find turtlebot3_camera)/launch/colorTrackingUSB.launch" />
+</launch>

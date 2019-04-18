@@ -81,11 +81,15 @@
 1.  roslaunch turtlebot3_camera cameraPi_robot.launch (TurtleBot3)
 2.  roslaunch turtlebot3_camera cameraPi_remote.launch (Remote PC)
 3.  rosrun turtlebot3_camera sharpenCalibrate_pi_node.py (Remote PC)
-or
+
+#### or
+
 1.  roslaunch turtlebot3_camera cameraPi_USB_robot.launch (TurtleBot3)
 2.  roslaunch turtlebot3_camera rangeDetectorPi_USB.launch  (Remote PC)
 3.  rosrun turtlebot3_camera sharpenCalibrate_pi_usb_node.py (Remote PC)
-or
+
+#### or
+
 1.  roslaunch turtlebot3_camera cameraUSB_robot.launch (Remote PC)
 2.  roslaunch turtlebot3_camera rangeDetectorUSB.launch  (Remote PC)
 3.  rosrun turtlebot3_camera sharpenCalibrate_usb_node.py (Remote PC)
@@ -95,9 +99,13 @@ or
 
 1.  roslaunch turtlebot3_camera cameraPi_robot.launch (TurtleBot3)
 2.  roslaunch turtlebot3_camera rangeDetectorPi.launch  (Remote PC)
-or
+
+#### or
+
 1.  roslaunch turtlebot3_camera cameraPi_USB_robot.launch (TurtleBot3)
 2.  roslaunch turtlebot3_camera rangeDetectorPi_USB.launch  (Remote PC)
-or
+
+#### or
+
 1.  roslaunch turtlebot3_camera cameraUSB_robot.launch (Remote PC)
 2.  roslaunch turtlebot3_camera rangeDetectorUSB.launch  (Remote PC)

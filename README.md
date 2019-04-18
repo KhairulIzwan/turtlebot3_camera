@@ -78,5 +78,26 @@
 # Important:
 ### All launch file with xxx_remote.launch will run Image converter node ("image_converter_pi_node.py", or "image_converter_pi_usb_node.py" or "image_converter_usb_node.py") which require args -- args="38 80 10" ---> gamma, alpha, beta. The value depending on the camera-calibration shapen the image quality --- rosrun turtlebot3_camera sharpenCalibrate_xxx_node.py
 
+1.  roslaunch turtlebot3_camera cameraPi_robot.launch (TurtleBot3)
+2.  roslaunch turtlebot3_camera cameraPi_remote.launch (Remote PC)
+3.  rosrun turtlebot3_camera sharpenCalibrate_pi_node.py (Remote PC)
+or
+1.  roslaunch turtlebot3_camera cameraPi_USB_robot.launch (TurtleBot3)
+2.  roslaunch turtlebot3_camera rangeDetectorPi_USB.launch  (Remote PC)
+3.  rosrun turtlebot3_camera sharpenCalibrate_pi_usb_node.py (Remote PC)
+or
+1.  roslaunch turtlebot3_camera cameraUSB_robot.launch (Remote PC)
+2.  roslaunch turtlebot3_camera rangeDetectorUSB.launch  (Remote PC)
+3.  rosrun turtlebot3_camera sharpenCalibrate_usb_node.py (Remote PC)
+
 ###  Range Detector
 ####  Use to find the color range (upper/lower) -- require an args -- args="HSV 38 80 10" where HSV is colorspace, and 38, 80, and 18 (gamma, alpha, beta) from image sharpenCalibrate_xxx_node.
+
+1.  roslaunch turtlebot3_camera cameraPi_robot.launch (TurtleBot3)
+2.  roslaunch turtlebot3_camera rangeDetectorPi.launch  (Remote PC)
+or
+1.  roslaunch turtlebot3_camera cameraPi_USB_robot.launch (TurtleBot3)
+2.  roslaunch turtlebot3_camera rangeDetectorPi_USB.launch  (Remote PC)
+or
+1.  roslaunch turtlebot3_camera cameraUSB_robot.launch (Remote PC)
+2.  roslaunch turtlebot3_camera rangeDetectorUSB.launch  (Remote PC)

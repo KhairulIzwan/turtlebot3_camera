@@ -1,0 +1,7 @@
+<launch>
+  <node name="color_tracking_usb"
+        pkg="turtlebot3_camera"
+        type="color_tracking_usb_node.py"
+        args="Red 0 88 177 49 255 255"
+        output="screen"/>
+</launch>

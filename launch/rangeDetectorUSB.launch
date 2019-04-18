@@ -1,4 +1,6 @@
 <launch>
+  <include file="$(find turtlebot3_camera)/launch/cameraUSB_remote.launch" />
+  
   <node name="range_detector_usb"
         pkg="turtlebot3_camera"
         type="range_detector_usb_node.py"

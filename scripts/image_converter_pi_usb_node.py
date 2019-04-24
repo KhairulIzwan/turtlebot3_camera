@@ -22,8 +22,7 @@ from cv_bridge import CvBridgeError
 import numpy as np
 
 class image_converter_node:
-    def __init__(self, name, gamma, alpha, beta):
-        self.name = name
+    def __init__(self, gamma, alpha, beta):
         self.gamma = float(gamma)
         self.alpha = float(alpha)
         self.beta = float(beta)
@@ -55,19 +54,19 @@ class image_converter_node:
         rospy.on_shutdown(self.shutdown)
 
         """ Give the OpenCV display window a name """
-        self.cv_window_name = "Test Vision Node (Pi-USB-" + self.name + ")"
+        self.cv_window_name = "Test Vision Node (Pi-USB)"
 
         """ Create the cv_bridge object """
         self.bridge = CvBridge()
 
         """ Subscribe to the raw camera image topic """
-        self.imgRaw_sub = rospy.Subscriber("/camPi_USB_" + self.name + "/image_raw", Image, self.callback)
+        self.imgRaw_sub = rospy.Subscriber("/camPi_USB/image_raw", Image, self.callback)
 
         """ Subscribe to the camera info topic """
-        self.imgRaw_sub = rospy.Subscriber("/camPi_USB_" + self.name + "/camera_info", CameraInfo, self.getCameraInfo)
+        self.imgRaw_sub = rospy.Subscriber("/camPi_USB/camera_info", CameraInfo, self.getCameraInfo)
 
         """ Publish as the opencv image topic """
-        self.imgCV_pub = rospy.Publisher(self.name + "/pi_usb_opencv_img", Image, queue_size=10)
+        self.imgCV_pub = rospy.Publisher("/pi_usb_opencv_img", Image, queue_size=10)
 
     def callback(self,data):
         """ Convert the raw image to OpenCV format """
@@ -163,7 +162,7 @@ def usage():
     print("%s" % sys.argv[0])
 
 def main(args):
-    vn = image_converter_node(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
+    vn = image_converter_node(sys.argv[1], sys.argv[2], sys.argv[3])
 
     try:
         rospy.spin()

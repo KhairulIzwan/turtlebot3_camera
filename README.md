@@ -12,7 +12,8 @@
 ### BringUp Camera
 #### Both launch file xxx_robot.launch and xxx_remote.launch act like bringup in original TurtleBot3 wiki.
 1.  Using Raspberry Pi Camera on RPi:
-    1.  cameraPi_robot.launch
+    1.  roscore (Remote PC)
+    2.  cameraPi_robot.launch
         1.  launch on TurtleBot3
         2.  publishing:
             1.  /camPi/camera_info
@@ -27,7 +28,7 @@
             10. /camPi/image_raw/theora/parameter_descriptions
             11. /camPi/image_raw/theora/parameter_updates
 
-    2.  cameraPi_remote.launch
+    3.  cameraPi_remote.launch
         1.  launch on Remote PC
         2.  publishing:
             1.  /pi_opencv_img
@@ -36,7 +37,8 @@
             2.  /camPi/image_raw
 
 2.  Using USB Camera on RPi:
-    1.  cameraPi_USB_robot.launch
+    1.  roscore (Remote PC)
+    2.  cameraPi_USB_robot.launch
         1.  launch on TurtleBot3
         2.  publishing:
             1.  /camPi_USB/camera_info
@@ -51,7 +53,7 @@
             10. /camPi_USB/image_raw/theora/parameter_descriptions
             11. /camPi_USB/image_raw/theora/parameter_updates
 
-    2.  cameraPi_USB_remote.launch
+    3.  cameraPi_USB_remote.launch
         1.  launch on Remote PC
         2.  publishing:
             1.  /pi_usb_opencv_img
@@ -60,7 +62,8 @@
             2.  /camPi_USB/image_raw
 
 3.  Using USB Camera (PC use only)
-    1.  cameraUSB_robot.launch
+    1.  roscore (Remote PC)
+    2.  cameraUSB_robot.launch
         1.  launch on Remote PC
         2.  publishing:
             1.  /camUSB/camera_info
@@ -75,7 +78,7 @@
             10. /camUSB/image_raw/theora/parameter_descriptions
             11. /camUSB/image_raw/theora/parameter_updates
 
-    2.  cameraUSB_remote.launch
+    3.  cameraUSB_remote.launch
         1.  launch on Remote PC
         2.  publishing:
             1.  /usb_opencv_img
@@ -86,34 +89,40 @@
 # Important:
 ### All launch file with xxx_remote.launch will run Image converter node ("image_converter_pi_node.py", or "image_converter_pi_usb_node.py" or "image_converter_usb_node.py") which require args -- args="38 80 10" ---> gamma, alpha, beta. The value depending on the camera-calibration shapen the image quality --- rosrun turtlebot3_camera sharpenCalibrate_xxx_node.py
 
-1.  roslaunch turtlebot3_camera cameraPi_robot.launch (TurtleBot3)
-2.  roslaunch turtlebot3_camera cameraPi_remote.launch (Remote PC)
-3.  rosrun turtlebot3_camera sharpenCalibrate_pi_node.py (Remote PC)
+1.  roscore (Remote PC)
+2.  roslaunch turtlebot3_camera cameraPi_robot.launch (TurtleBot3)
+3.  roslaunch turtlebot3_camera cameraPi_remote.launch (Remote PC)
+4.  rosrun turtlebot3_camera sharpenCalibrate_pi_node.py (Remote PC)
 
 #### or
 
-1.  roslaunch turtlebot3_camera cameraPi_USB_robot.launch (TurtleBot3)
-2.  roslaunch turtlebot3_camera rangeDetectorPi_USB.launch  (Remote PC)
-3.  rosrun turtlebot3_camera sharpenCalibrate_pi_usb_node.py (Remote PC)
+1.  roscore (Remote PC)
+2.  roslaunch turtlebot3_camera cameraPi_USB_robot.launch (TurtleBot3)
+3.  roslaunch turtlebot3_camera rangeDetectorPi_USB.launch  (Remote PC)
+4.  rosrun turtlebot3_camera sharpenCalibrate_pi_usb_node.py (Remote PC)
 
 #### or
 
-1.  roslaunch turtlebot3_camera cameraUSB_robot.launch (Remote PC)
-2.  roslaunch turtlebot3_camera rangeDetectorUSB.launch  (Remote PC)
-3.  rosrun turtlebot3_camera sharpenCalibrate_usb_node.py (Remote PC)
+1.  roscore (Remote PC)
+2.  roslaunch turtlebot3_camera cameraUSB_robot.launch (Remote PC)
+3.  roslaunch turtlebot3_camera rangeDetectorUSB.launch  (Remote PC)
+4.  rosrun turtlebot3_camera sharpenCalibrate_usb_node.py (Remote PC)
 
 ###  Range Detector
 ####  Use to find the color range (upper/lower) -- require an args -- args="HSV 38 80 10" where HSV is colorspace, and 38, 80, and 18 (gamma, alpha, beta) from image sharpenCalibrate_xxx_node.
 
-1.  roslaunch turtlebot3_camera cameraPi_robot.launch (TurtleBot3)
-2.  roslaunch turtlebot3_camera rangeDetectorPi.launch  (Remote PC)
+1.  roscore (Remote PC)
+2.  roslaunch turtlebot3_camera cameraPi_robot.launch (TurtleBot3)
+3.  roslaunch turtlebot3_camera rangeDetectorPi.launch  (Remote PC)
 
 #### or
 
-1.  roslaunch turtlebot3_camera cameraPi_USB_robot.launch (TurtleBot3)
-2.  roslaunch turtlebot3_camera rangeDetectorPi_USB.launch  (Remote PC)
+1.  roscore (Remote PC)
+2.  roslaunch turtlebot3_camera cameraPi_USB_robot.launch (TurtleBot3)
+3.  roslaunch turtlebot3_camera rangeDetectorPi_USB.launch  (Remote PC)
 
 #### or
 
-1.  roslaunch turtlebot3_camera cameraUSB_robot.launch (Remote PC)
-2.  roslaunch turtlebot3_camera rangeDetectorUSB.launch  (Remote PC)
+1.  roscore (Remote PC)
+2.  roslaunch turtlebot3_camera cameraUSB_robot.launch (Remote PC)
+3.  roslaunch turtlebot3_camera rangeDetectorUSB.launch  (Remote PC)

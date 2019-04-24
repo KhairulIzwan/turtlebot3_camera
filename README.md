@@ -1,5 +1,13 @@
 # turtlebot3_camera
 
+##  Notes: We will use cv_camera ros package
+1.  Installing cv_camera ros package:
+    1.  git clone https://github.com/OTL/cv_camera.git
+2.  (OPTIONAL) -- if error appear:
+    1.  git clone https://github.com/ros/roslint.git -- some package require for cv_camera
+#### or
+    2.  rosdep install --from-paths src --ignore-src -r -y (the best; will install any require dependencies of all packages)
+
 ## launch:
 ### BringUp Camera
 #### Both launch file xxx_robot.launch and xxx_remote.launch act like bringup in original TurtleBot3 wiki.

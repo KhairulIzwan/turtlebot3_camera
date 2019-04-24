@@ -2,6 +2,6 @@
   <node name="image_converter_pi_usb"
         pkg="turtlebot3_camera"
         type="image_converter_pi_usb_node.py"
-        args="38 80 10"
+        args="cam1 38 80 10"
         output="screen"/>
 </launch>

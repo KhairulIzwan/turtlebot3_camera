@@ -1,0 +1,13 @@
+<launch>
+  <node name="image_converter_pi_usb_cam1"
+        pkg="turtlebot3_camera"
+        type="image_converter_pi_usb_node.py"
+        args="38 80 10"
+        output="screen"/>
+
+  <node name="image_converter_pi_usb_cam2"
+        pkg="turtlebot3_camera"
+        type="image_converter_pi_usb_node.py"
+        args="38 80 10"
+        output="screen"/>
+</launch>
